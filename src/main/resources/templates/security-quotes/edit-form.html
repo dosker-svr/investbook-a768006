@@ -1,0 +1,243 @@
+<!--
+  ~ InvestBook
+  ~ Copyright (C) 2021  Spacious Team <spacious-team@ya.ru>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:if="${quote.id == null}">Добавить котировку</title>
+    <title th:unless="${quote.id == null}">Редактировать котировку</title>
+    <script type="text/javascript" src="/moex.js"></script>
+    <link rel="stylesheet" href="/water-light.css"> <!-- https://cdn.jsdelivr.net/npm/water.css@2/out/light.css -->
+    <link rel="stylesheet" href="/water-wrapper.css">
+    <link rel="stylesheet" href="/main.css">
+    <style>
+        #security-type {
+            width: 184px;
+        }
+
+        #time {
+            width: 86px;
+        }
+
+        input {
+            width: 86px;
+        }
+
+        input[type="submit"] {
+            width: 150px;
+        }
+
+        #quote {
+            width: 130px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 th:if="${quote.id == null}">Добавить котировку</h1>
+<h1 th:unless="${quote.id == null}">Редактировать котировку</h1>
+<form action="#" th:action="@{/security-quotes}" th:object="${quote}" method="post">
+    <label>
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{timestamp}" id="timestamp"/>
+    </label>
+    <label>
+        Инструмент
+        <input type="text" th:field="*{security}" list="securities" class="security" id="security" required/>
+    </label>
+    <a id="find-securities" onclick="uploadSecurities('security', 'securities', this)">
+        <svg viewBox="0 0 20 20">
+            <path d="M18.125,15.804l-4.038-4.037c0.675-1.079,1.012-2.308,1.01-3.534C15.089,4.62,12.199,1.75,8.584,1.75C4.815,1.75,1.982,4.726,2,8.286c0.021,3.577,2.908,6.549,6.578,6.549c1.241,0,2.417-0.347,3.44-0.985l4.032,4.026c0.167,0.166,0.43,0.166,0.596,0l1.479-1.478C18.292,16.234,18.292,15.968,18.125,15.804 M8.578,13.99c-3.198,0-5.716-2.593-5.733-5.71c-0.017-3.084,2.438-5.686,5.74-5.686c3.197,0,5.625,2.493,5.64,5.624C14.242,11.548,11.621,13.99,8.578,13.99 M16.349,16.981l-3.637-3.635c0.131-0.11,0.721-0.695,0.876-0.884l3.642,3.639L16.349,16.981z"></path>
+        </svg>
+    </a>
+    <label>
+        Тип инструмента
+        <select id="security-type" onchange="selectType()" th:field="*{securityType}" required>
+            <option value="SHARE" selected>Акция, ETF</option>
+            <option value="BOND">Облигация</option>
+            <option value="DERIVATIVE">Фьючерс, опцион</option>
+            <option value="CURRENCY">Валюта</option>
+            <option value="ASSET">Произвольный актив</option>
+        </select>
+    </label>
+    <br>
+    <label>
+        Дата
+        <input type="date" th:value="${#temporals.format(quote.timestamp, 'yyyy-MM-dd')}" id="date" required/>
+    </label>
+    <label>
+        Время
+        <input type="time" th:value="${#temporals.format(quote.timestamp, 'HH:mm')}" id="time" required/>
+    </label>
+    <br>
+    <label>
+        Котировка
+        <input type="number" step="any" min="0.01" th:field="*{quote}" id="quote" required/>
+    </label>
+    <label id="price">
+        Цена
+        <input type="number" step="any" min="0.01" th:field="*{price}"/>
+    </label>
+    <label id="accrued-interest">
+        НКД
+        <input type="number" step="0.01" min="0" th:field="*{accruedInterest}"/>
+    </label>
+    <label id="currency">
+        Валюта
+        <input type="text" th:field="*{currency}" value="RUB" list="currencies" required/>
+    </label>
+    <br/>
+    <input type="submit" onclick="checkValues()" value="Сохранить"/>
+
+    <datalist id="securities">
+        <option th:each="security : ${securities}" th:text="${security}"></option>
+    </datalist>
+
+    <datalist id="currencies">
+        <option>RUB</option>
+        <option>USD</option>
+        <option>EUR</option>
+        <option>GBP</option>
+        <option>CHF</option>
+        <option>CNY</option>
+        <option>HKD</option>
+    </datalist>
+</form>
+
+<p class="hint">
+    Дата и время указывать в вашей временной таймзоне.
+</p>
+
+<p class="hint">
+    Инструмент: для акций, облигаций, ETF после наименования инструмента можно в скобках указать ISIN, например
+    "Яндекс (NL0009805522)". Если в выпадающем списке не появляется бумага, то наберите часть наименования
+    и нажмите на символ "Лупы". Бумага подгрузится с
+    <a href="http://iss.moex.com/iss/securities?securities.columns=secid,name,isin,emitent_inn&group_by=group&group_by_filter=stock_shares">
+        МосБиржи</a> при продолжении ввода, если существует совпадение. Для фьючерсных контрактов допустим
+    любой формат, например "Si-3.22" (или в кратком коде "SiH2"), будет сохранен первый вариант. Для опционов
+    указывается наименование контракта, например "Si-3.22M170322CA80000" (или в кратком коде "Si80000BC2"), придерживаясь
+    одного из вариантов для всех сделок. Для валютных сделок указывается наименование контракта, например "USDRUB_TOM".
+</p>
+<p class="hint">
+    Произвольный актив - это недвижимость, криптовалюта, инвестиционные монеты и другие активы которые имеют цену и
+    могут торговаться для извлечения прибыли.
+</p>
+
+<p class="hint">
+    Котировка: для облигации в процентах (%), для срочных контрактов - в пунктах.
+</p>
+
+<p class="hint">
+    Цена: для облигации - чистая цена в валюте, для срочных контрактов опционально - в валюте.
+</p>
+
+<script type="text/javascript">
+
+    selectType()
+
+    function selectType() {
+        let e = document.getElementById('security-type');
+        let type = e.options[e.selectedIndex].value
+
+        // for type = SHARE, CURRENCY and ASSET
+        hide('price')
+        hide('accrued-interest')
+        display('currency')
+        setPattern('security', '^.*(\\s+\\([A-Z0-9]+\\)\\s*)?$')
+
+        switch (type) {
+            case "BOND":
+                displayRequired('price')
+                displayRequired('accrued-interest')
+                break
+            case "DERIVATIVE":
+                display('price')
+                removePattern('security')
+                hide('currency')
+                break
+            case "CURRENCY":
+                removePattern('security')
+                hide('currency')
+                break
+            case "ASSET":
+                removePattern('security')
+                break
+        }
+    }
+
+    function hide(id) {
+        let e = document.getElementById(id);
+        e.style.display = 'none'
+        let input = e.getElementsByTagName("input")[0]
+        input.required = false
+    }
+
+    function display(id) {
+        let e = document.getElementById(id);
+        e.style.display = ''
+        return e
+    }
+
+    function displayRequired(id) {
+        let e = display(id)
+        let input = e.getElementsByTagName("input")[0]
+        input.required = true
+    }
+
+    function setPattern(id, pattern) {
+        document.getElementById(id).setAttribute("pattern", pattern)
+    }
+
+    function removePattern(id) {
+        document.getElementById(id).removeAttribute("pattern")
+    }
+
+    function checkValues() {
+        let e = document.getElementById('security-type');
+        let type = e.options[e.selectedIndex].value
+        switch (type) {
+            case "SHARE":
+            case "ASSET":
+                erase('price')
+                erase('accrued-interest')
+                break
+            case "CURRENCY":
+                erase('price')
+                erase('accrued-interest')
+                erase('currency')
+                break
+            case "DERIVATIVE":
+                erase('accrued-interest')
+                erase('currency')
+                break
+        }
+        document.getElementById('timestamp').value =
+            new Date(document.getElementById('date').value + ' ' + document.getElementById('time').value)
+                .toISOString()
+    }
+
+    function erase(id) {
+        let e = document.getElementById(id);
+        let input = e.getElementsByTagName("input")[0]
+        input.value = ''
+    }
+</script>
+
+</body>
+</html>

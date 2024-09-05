@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ InvestBook
+  ~ Copyright (C) 2021  Spacious Team <spacious-team@ya.ru>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.0.7</version> <!-- Обновлять с учетом https://github.com/spacious-team/investbook/issues/545 -->
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>ru.investbook</groupId>
+    <artifactId>investbook</artifactId>
+    <version>2024.1</version>
+
+    <name>investbook</name>
+    <description>Investor Accounting Book</description>
+    <url>https://github.com/spacious-team/investbook</url>
+
+    <licenses>
+        <license>
+            <name>GNU Affero GPLv3</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/spacious-team/investbook.git</connection>
+        <developerConnection>scm:git:git@github.com:spacious-team/investbook.git</developerConnection>
+        <tag>master</tag>
+        <url>https://github.com/spacious-team/investbook</url>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/spacious-team/investbook/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <organization>Spacious Team</organization>
+            <organizationUrl>https://github.com/spacious-team</organizationUrl>
+            <email>spacious-team@ya.ru</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <!-- Valid version is (0-255).(0-255).(0-65535) -->
+        <win.msi.version>24.1</win.msi.version>
+        <java.version>21</java.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <!-- version is same as for hibernate-jpamodelgen dep, just scope is changed -->
+                <scope>compile</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.spacious-team</groupId>
+            <artifactId>broker-report-parser-api</artifactId>
+            <version>2023.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spacious-team</groupId>
+            <artifactId>table-wrapper-spring-boot-starter</artifactId>
+            <version>2023.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.decampo</groupId>
+            <artifactId>xirr</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.albfernandez</groupId>
+            <artifactId>juniversalchardet</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>5.2.3</version>  <!-- use same version as table-wrapper-spring-boot-starter provides -->
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                    <!-- use org.springframework.boot.loader.PropertiesLauncher instead of JarLauncher
+                    (https://docs.spring.io/spring-boot/docs/current/maven-plugin/usage.html).
+                    PropertiesLauncher reads settings from resources/loader.properties
+                    (https://docs.spring.io/spring-boot/docs/current/reference/html/executable-jar.html#executable-jar-property-launcher-features) -->
+                    <layout>ZIP</layout>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-html-doc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/classes/static/user-guide/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <attributes>
+                        <project-version>${project.version}</project-version>
+                        <linkcss>true</linkcss>
+                        <source-highlighter>coderay</source-highlighter>
+                    </attributes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>xsd-to-java</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>zip</id>
+            <activation>
+                <property>
+                    <name>!no-zip</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>zip</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/zip/zip.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>jpackage</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>jpackage</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <finalName>jpackage</finalName>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/jpackage/dir.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <!-- jpackage requires Wix 3: https://wixtoolset.org/docs/wix3/ (only Wix, Toolset not required) -->
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>windows installer</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jpackage</goal>
+                                </goals>
+                                <configuration>
+                                    <type>MSI</type>
+                                    <name>Investbook</name>
+                                    <appVersion>${win.msi.version}</appVersion>
+                                    <vendor>Spacious Team</vendor>
+                                    <description>${project.description}</description>
+                                    <copyright>InvestBook, Copyright (C) 2020 Spacious Team
+                                        (https://github.com/spacious-team)
+                                    </copyright>
+                                    <mainJar>${project.artifactId}-${project.version}.jar</mainJar>
+                                    <javaOptions>
+                                        <javaOption>-Dloader.path=./app/extensions</javaOption>
+                                        <javaOption>-Xms16m</javaOption>
+                                        <javaOption>-XX:MinHeapFreeRatio=1</javaOption>
+                                        <javaOption>-XX:MaxHeapFreeRatio=5</javaOption>
+                                        <javaOption>-XX:G1PeriodicGCInterval=5000</javaOption>
+                                        <javaOption>-XX:GCTimeRatio=1</javaOption>
+                                        <javaOption>-XX:MaxGCPauseMillis=2000</javaOption>
+                                        <javaOption>-Xverify:none
+                                        </javaOption> <!-- reduce VM.native_memory Class by 6MB -->
+                                        <javaOption>-XX:-TieredCompilation
+                                        </javaOption> <!-- reduce VM.native_memory Code by 20MB -->
+                                    </javaOptions>
+                                    <arguments>
+                                        <argument>--spring.config.additional-location=file:./app/</argument>
+                                    </arguments>
+                                    <input>${project.build.directory}/jpackage/jpackage/</input>
+                                    <icon>${project.basedir}/src/main/assembly/jpackage/icon.ico</icon>
+                                    <destination>${project.build.directory}/jpackage</destination>
+                                    <winDirChooser>true</winDirChooser>
+                                    <winMenu>true</winMenu>
+                                    <winMenuGroup>Investbook</winMenuGroup>
+                                    <winShortcut>true</winShortcut>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <layers>
+                                <enabled>true</enabled>
+                            </layers>
+                            <image>
+                                <name>spaciousteam/investbook:latest</name>
+                                <tags>
+                                    <tag>spaciousteam/investbook:${project.version}</tag>
+                                </tags>
+                                <publish>true</publish>
+                                <env>
+                                    <BPE_LANG>C.UTF-8</BPE_LANG>
+                                </env>
+                                <buildpacks>
+                                    <!-- Defines available bellsoft-liberica java versions from
+                                    https://github.com/paketo-buildpacks/java/releases
+                                    JRE with ${java.version} will be selected automatically when available -->
+                                    <buildpack>gcr.io/paketo-buildpacks/java:10.2.1</buildpack>
+                                </buildpacks>
+                            </image>
+                            <docker>
+                                <publishRegistry>
+                                    <url>https://index.docker.io/v2/</url>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <username>${env.DOCKER_ID}</username>
+                                    <!--suppress UnresolvedMavenProperty -->
+                                    <password>${env.DOCKERHUB_TOKEN}</password>
+                                </publishRegistry>
+                            </docker>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

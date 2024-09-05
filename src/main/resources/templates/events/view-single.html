@@ -1,0 +1,60 @@
+<!--
+  ~ InvestBook
+  ~ Copyright (C) 2021  Spacious Team <spacious-team@ya.ru>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сохранено событие</title>
+    <link rel="stylesheet" href="/water-light.css"> <!-- https://cdn.jsdelivr.net/npm/water.css@2/out/light.css -->
+    <link rel="stylesheet" href="/water-wrapper.css">
+</head>
+<body>
+
+<h1>Сохранено событие</h1>
+
+<p th:text="'Счет: ' +  ${event.portfolio}"/>
+<p th:text="'Номер записи: ' +  ${event.id != null ? event.id : event.attachedSecurity.securityEventCashFlowId}"/>
+<p th:text="'Дата: ' + ${event.date}"/>
+<p th:text="'Инструмент: ' +  ${event.attachedSecurity.security}" th:if="${event.attachedSecurity.security != null && event.attachedSecurity.security != ''}"/>
+<p th:text="'Количество: ' + ${event.attachedSecurity.count}" th:if="${event.attachedSecurity.count != null}"/>
+<p th:switch="${event.getStringType}">
+    <span th:case="CASH_IN">Пополнение</span>
+    <span th:case="CASH_OUT">Снятие</span>
+    <span th:case="DIVIDEND">Дивиденд</span>
+    <span th:case="COUPON">Купон</span>
+    <span th:case="AMORTIZATION">Амортизация облигации</span>
+    <span th:case="REDEMPTION">Погашение облигации</span>
+    <span th:case="FEE_OUT">Комиссия</span>
+    <span th:case="FEE_IN">Возврат комиссии</span>
+    <span th:case="TAX_OUT">Налог</span>
+    <span th:case="TAX_IN">Возврат налога</span>
+    <span th:case="TAX_IIS_A">Вычет ИИС тип А</span>
+    <span th:text="': ' + ${event.value.abs()} + ' ' + ${event.valueCurrency}"/>
+</p>
+<br th:if="${event.description != null}">
+<p th:text="${event.description}" th:if="${event.description != null}"/>
+<a href="/events/edit-form">Добавить еще</a><br>
+<a th:href="@{/events/delete(id=${event.id})}" th:if="${event.id != null}">Удалить это событие</a>
+<a th:href="@{/security-events/delete(id=${event.attachedSecurity.securityEventCashFlowId})}"
+   th:if="${event.attachedSecurity.securityEventCashFlowId != null}">Удалить это событие по бумаге</a><br>
+<a href="/events">Посмотреть все события</a><br>
+<a href="/forms.html">На главную</a><br>
+
+</body>
+</html>

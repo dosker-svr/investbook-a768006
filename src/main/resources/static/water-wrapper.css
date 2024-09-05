@@ -1,0 +1,131 @@
+/*
+ * InvestBook
+ * Copyright (C) 2021  Spacious Team <spacious-team@ya.ru>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+html {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+body {
+    margin: auto;
+    padding-bottom: 100px;
+}
+
+h1 {
+    margin-bottom: 1em;
+}
+
+table {
+    table-layout: auto;
+}
+
+input {
+    width: 192px;
+}
+
+input[type=date] {
+    width: 130px;
+}
+
+input[type=submit] {
+    width: auto;
+}
+
+input.portfolio {
+    width: 117px;
+}
+
+input.security {
+    width: 390px;
+    padding-right: 34px;
+}
+
+.input-width {
+    min-width: 214px;
+}
+
+.hint {
+    font-size: medium;
+    color: dimgray;
+    text-align: justify;
+}
+
+.value {
+    text-align: right;
+}
+
+.table-row-control {
+    opacity: 0;
+}
+
+.table-row-control a:hover {
+    text-decoration: none;
+}
+
+tr:hover > .table-row-control {
+    opacity: 1;
+}
+
+.search-filter {
+    display: flex;
+    justify-content: center;
+    color: dimgray;
+}
+
+.search-filter * {
+    color: dimgray;
+}
+
+.search-filter input[type=date] {
+    width: 112px;
+}
+
+.search-filter .currency {
+    width: 76px;
+}
+
+.search-filter .page-size {
+    width: 6em;
+}
+
+.page-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+.page-bar li * {
+    margin: 0 10px;
+}
+
+.page-bar .page-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.page-bar .page-active a {
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: underline;
+    font-weight: bold;
+}
